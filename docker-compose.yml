@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+    photon:
+        build: 
+            context: photon
+            dockerfile: Dockerfile
+        ports:
+            - "2322:2322"
+        networks:
+            - backend
+        volumes:
+            - photon_data:/data/photon
+    proxy:
+        build: 
+            context: proxy
+            dockerfile: Dockerfile
+        args: 
+            ssl: True
+            cert: /home/morpheus/priv/cert.pem
+            cert-key: /home/morpheus/priv/privkey.pem
+            port: 443
+            rate-limit: 100
+            rate-reset: 60
+        networks:
+            - backend
+    
+
+networks:
+    backend:
+        driver: bridge
+
+volumes:
+    photon_data:
+        driver: local
