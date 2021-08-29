@@ -2,14 +2,16 @@ FROM ubuntu:latest
 
 WORKDIR /app
 
+RUN echo $(ls /home/morpheus/)
+
 # install dependencies
-RUN apt-get update -y && apt-get upgrade -y && apt-get install git
+RUN apt-get update -y && apt-get upgrade -y && apt-get install git python3-pip -y
 
 # copy files
 COPY /. .
 
 # install packages
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 # install fixed fastapi-limiter since official package got a unfixed bug
 RUN git clone https://github.com/marvingabler/fastapi-limiter && cd fastapi-limiter && pip install .
 
@@ -23,11 +25,11 @@ ARG rate-limit
 ARG rate-reset
 
 # copy ssl cert
-ADD ${cert} ${cert}
-ADD ${cert-key} ${cert-key}
+COPY ${cert} ${cert}
+COPY ${cert-key} ${cert-key}
 
 # expose port
 EXPOSE 433
 
 # start proxy server
-ENTRYPOINT ["python", "app.py"]
+ENTRYPOINT ["python3", "app.py"]
