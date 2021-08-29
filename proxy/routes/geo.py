@@ -11,10 +11,13 @@ RATE_RESET = environ["rate-reset"]
 
 router = APIRouter()
 
-@router.get("/by_name", dependencies=[Depends(RateLimiter(
-                        times=util.rate_limit, 
-                        seconds=util.rate_reset,
-                        ))])
+@router.get(
+    "/by_name", 
+    dependencies=[Depends(RateLimiter(
+        times=RATE_LIMIT, 
+        seconds=RATE_RESET,
+        ))]
+    )
 def by_name(
     name: str, 
     language: str="en", 
@@ -58,10 +61,13 @@ def by_name(
         return {"status":"error"}
 
 
-@router.get("/reverse", dependencies=[Depends(RateLimiter(
-                        times=util.rate_limit, 
-                        seconds=util.rate_reset,
-                        ))])
+@router.get(
+    "/reverse", 
+    dependencies=[Depends(RateLimiter(
+        times=RATE_LIMIT, 
+        seconds=RATE_RESET,
+        ))]
+    )
 def reverse(
     lat:float, 
     lon:float
