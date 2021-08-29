@@ -1,4 +1,4 @@
-version: '3.8'
+version: '0.1'
 
 services:
     photon:
@@ -25,7 +25,6 @@ services:
         networks:
             - backend
     
-
 networks:
     backend:
         driver: bridge
