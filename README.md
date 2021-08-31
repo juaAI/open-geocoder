@@ -8,7 +8,7 @@ Open Geocoder is a open geocoding API that offers the following features:
 
 ### Installation
 
-tba
+docker-compose up
 
 ### Todos
 - [ ] add tests
