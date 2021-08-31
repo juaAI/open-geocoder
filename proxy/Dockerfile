@@ -2,8 +2,6 @@ FROM ubuntu:latest
 
 WORKDIR /app
 
-RUN echo $(ls /home/morpheus/)
-
 # install dependencies
 RUN apt-get update -y && apt-get upgrade -y && apt-get install git python3-pip -y
 
@@ -13,23 +11,16 @@ COPY /. .
 # install packages
 RUN pip3 install -r requirements.txt
 # install fixed fastapi-limiter since official package got a unfixed bug
-RUN git clone https://github.com/marvingabler/fastapi-limiter && cd fastapi-limiter && pip install .
+RUN pip3 install git+git://github.com/marvingabler/fastapi-limiter
 
-# get args from docker-compose.yml
-ARG ssl
-ARG cert
-ARG cert-key
-ARG host
-ARG port
-ARG rate-limit
-ARG rate-reset
-
-# copy ssl cert
-COPY ${cert} ${cert}
-COPY ${cert-key} ${cert-key}
+# set env args
+ENV cert=certs/cert.pem
+ENV certkey=certs/privkey.pem
+ENV ratelimit=100
+ENV ratereset=60
 
 # expose port
-EXPOSE 433
+EXPOSE 443
 
 # start proxy server
-ENTRYPOINT ["python3", "app.py"]
+ENTRYPOINT ["python3", "server.py"]

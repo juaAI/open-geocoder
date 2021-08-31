@@ -1,6 +1,17 @@
-version: '0.1'
+version: '3.8'
 
 services:
+    proxy:
+        build: 
+            context: proxy
+            dockerfile: Dockerfile
+        ports:
+            - "8081:443"
+        networks:
+            - backend
+        depends_on: 
+            - redis
+            - photon
     photon:
         build: 
             context: photon
@@ -10,18 +21,10 @@ services:
         networks:
             - backend
         volumes:
-            - photon_data:/data/photon
-    proxy:
-        build: 
-            context: proxy
-            dockerfile: Dockerfile
-        args: 
-            ssl: True
-            cert: /home/morpheus/priv/cert.pem
-            cert-key: /home/morpheus/priv/privkey.pem
-            port: 443
-            rate-limit: 100
-            rate-reset: 60
+            - photon_data:/data
+    redis:
+        image: redis:latest
+        restart: unless-stopped
         networks:
             - backend
     

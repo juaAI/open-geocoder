@@ -1,13 +1,23 @@
 from fastapi import APIRouter, Depends
 from fastapi_limiter.depends import RateLimiter
-from requests import get
 
-from ..util import check_lat_lon
+from requests import get
+from typing import Optional
 from os import environ
+from sys import argv
+
+from util import check_lat_lon
 
 PHOTON_URL = "http://photon:2322/"
-RATE_LIMIT = environ["rate-limit"]
-RATE_RESET = environ["rate-reset"]
+if len(argv) > 1:
+    if argv[1] == "--standalone":
+        PHOTON_URL = "http://localhost:2322/"
+        RATE_LIMIT = 100
+        RATE_RESET = 60
+else:
+    RATE_LIMIT = int(environ["ratelimit"])
+    RATE_RESET = int(environ["ratereset"])
+
 
 router = APIRouter()
 
@@ -41,7 +51,7 @@ def by_name(
     '''
 
     query_params = "&limit="
-    query = PHOTON_URL + "api/?q=" + name + "&lang=" + language + query_params 
+    query = PHOTON_URL + "api?q=" + name + "&lang=" + language + query_params 
     
     if limit is None:
         query = query + str(1)
