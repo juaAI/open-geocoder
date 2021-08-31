@@ -3,7 +3,7 @@ if [ -d "photon_data/elasticsearch" ]; then
     echo "Found existing files"
 else
     echo "Downloading new files"
-    #wget -N -O - https://download1.graphhopper.com/public/photon-db-latest.tar.bz2 | pbzip2 -cd | tar x
+    wget -N -O - https://download1.graphhopper.com/public/photon-db-latest.tar.bz2 | pbzip2 -cd | tar x
 fi
 
 ls
